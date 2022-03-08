@@ -6,9 +6,10 @@ const server = express();
 server.use(express.json());
 
 server.post('/api/users', (req, res) => {
-  User.insert(req.body)
+  const {name, bio } = req.body;
+  User.insert({name, bio})
     .then(postUser => {
-      if (req.body == null) {
+      if (postUser.name == null || postUser.bio == null) {
         res.status(400).json({ message: "Please provide name and bio for the user" });
       } else {
         res.status(201).json(postUser);
@@ -63,7 +64,7 @@ server.put('/api/users/:id', (req, res) => {
 
   User.update(id, {name, bio})
     .then(updatedUser => {
-      if (updatedUser.id == null) {
+      if (updatedUser == null) {
         res.status(404).json({ message: 'The user with the specified ID does not exist' });
       } else if (updatedUser.name == null || updatedUser.bio == null) {
         res.status(400).json({ message: 'Please provide name and bio for the user'});
